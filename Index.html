@@ -1,0 +1,666 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8faff">
+<meta name="description" content="ToolBox Hub — free, fast, useful online tools for everyday work.">
+<title>ToolBox Hub — All Your Tools, One Place</title>
+
+<!-- Free QR library. QR generation requires internet access. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+
+<style>
+:root {
+  color-scheme: light;
+  --bg:#f7f8fc; --surface:#fff; --surface2:#f1f4fa;
+  --text:#172033; --muted:#707b91; --line:#e5e9f2;
+  --primary:#6558e8; --primary2:#8b5cf6; --soft:#eeebff;
+  --green:#16896a; --red:#d74655; --shadow:0 12px 38px #2633540d;
+  --radius:20px;
+}
+[data-theme="dark"] {
+  color-scheme:dark;
+  --bg:#0d111b; --surface:#151b29; --surface2:#20283a;
+  --text:#edf1ff; --muted:#a0abc0; --line:#2a3448;
+  --primary:#a49aff; --primary2:#c4a4ff; --soft:#292445;
+  --green:#50d6ac; --red:#ff7c8b; --shadow:0 12px 38px #0003;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55;transition:background .25s,color .25s}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #8b5cf680;outline-offset:2px}
+a{color:inherit;text-decoration:none}
+.container{width:min(1180px,calc(100% - 32px));margin:auto}
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.nav{min-height:76px;display:flex;align-items:center;gap:22px}
+.brand{display:flex;align-items:center;gap:11px;font-size:20px;font-weight:850;letter-spacing:-.7px;white-space:nowrap}
+.logo{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#6657e8,#9b65f5);color:white;box-shadow:0 7px 18px #7663e83c;font-size:22px}
+.brand small{display:block;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:700;margin-top:-3px}
+.navlinks{display:flex;gap:22px;margin-left:auto;color:var(--muted);font-size:13px;font-weight:650}
+.navlinks a:hover{color:var(--primary)}
+.iconbtn,.btn{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;padding:10px 13px;font-weight:700;transition:transform .18s,border-color .18s,background .18s}
+.iconbtn:hover,.btn:hover{transform:translateY(-1px);border-color:var(--primary)}
+.btn-primary{background:var(--primary);color:white;border-color:var(--primary)}
+.btn-primary:hover{background:var(--primary2);color:white}
+.btn-small{padding:8px 11px;font-size:12px}
+.hero{padding:66px 0 38px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;z-index:-1;width:420px;height:420px;right:-140px;top:-160px;border-radius:50%;background:radial-gradient(circle,#9588ff25,transparent 68%)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font-size:12px;font-weight:750}
+.dot{width:8px;height:8px;border-radius:50%;background:#25bd8b;box-shadow:0 0 0 4px #25bd8b1b}
+h1{font-size:clamp(38px,6vw,68px);line-height:1.04;letter-spacing:-3px;margin:22px 0 16px;font-weight:900;max-width:800px}
+.gradient-text{background:linear-gradient(110deg,#6558e8,#a35df1 58%,#ed7baf);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:630px;color:var(--muted);font-size:16px;margin:0 0 26px}
+.searchbox{display:flex;align-items:center;gap:12px;width:min(660px,100%);background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:8px 9px 8px 16px;box-shadow:var(--shadow)}
+.searchbox .search-icon{font-size:20px;color:var(--muted)}
+.searchbox input{min-width:0;flex:1;border:0;outline:none;background:transparent;color:var(--text);padding:10px 0}
+.searchbox input:focus{outline:none}
+.search-hint{font-size:11px;color:var(--muted);white-space:nowrap}
+.stats{display:flex;flex-wrap:wrap;gap:24px;margin-top:23px;color:var(--muted);font-size:12px}
+.stats strong{color:var(--text)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:32px 0 18px}
+.section-head h2{font-size:23px;letter-spacing:-.7px;margin:0}
+.section-head p{color:var(--muted);font-size:13px;margin:4px 0 0}
+.pills{display:flex;gap:8px;overflow:auto;padding:2px 0 12px;scrollbar-width:thin}
+.pill{white-space:nowrap;padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font-size:12px;font-weight:750}
+.pill.active{background:var(--soft);border-color:var(--primary);color:var(--primary)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tool-card{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:19px;padding:20px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;display:flex;flex-direction:column;animation:rise .4s both}
+.tool-card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--primary) 48%,var(--line))}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tool-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.tool-icon{display:grid;place-items:center;width:49px;height:49px;border-radius:15px;background:var(--soft);font-size:24px}
+.tool-category{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.tool-card h3{font-size:17px;margin:17px 0 6px;letter-spacing:-.3px}
+.tool-card p{font-size:13px;color:var(--muted);margin:0 0 20px;flex:1}
+.open-tool{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;background:var(--surface2);border:0;border-radius:11px;padding:11px 13px;color:var(--text);font-weight:750;font-size:12px}
+.open-tool span:last-child{color:var(--primary);font-size:18px}
+.empty{display:none;padding:35px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
+.trust{margin:45px 0;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.trust-item{display:flex;gap:12px;align-items:flex-start}
+.trust-item .symbol{font-size:23px}
+.trust-item strong{display:block;font-size:13px}
+.trust-item span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.footer{border-top:1px solid var(--line);padding:25px 0 35px;color:var(--muted);font-size:12px}
+.footer-inner{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:16px;background:#1015258a;backdrop-filter:blur(5px)}
+.modal.show{display:flex}
+.modal-panel{width:min(720px,100%);max-height:min(88vh,900px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:23px;box-shadow:0 25px 90px #0003;animation:pop .2s both}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;gap:12px;padding:20px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}
+.modal-head h2{font-size:18px;margin:0;flex:1}
+.close{width:36px;height:36px;border-radius:11px;border:1px solid var(--line);background:var(--surface2);color:var(--text);font-size:20px}
+.modal-body{padding:22px}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}
+.control{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:12px;padding:12px 13px;min-width:0}
+textarea.control{min-height:120px;resize:vertical}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.result{margin-top:15px;padding:14px;border:1px solid var(--line);border-radius:13px;background:var(--surface2);overflow-wrap:anywhere}
+.result strong{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.7px}
+.result output{font-size:18px;font-weight:800;white-space:pre-wrap}
+.notice{color:var(--muted);font-size:12px;margin:10px 0 0}
+.status{font-size:12px;margin-top:10px;min-height:18px;color:var(--muted)}
+.status.error{color:var(--red)}
+.status.success{color:var(--green)}
+.calc-screen{background:var(--surface2);padding:16px;border-radius:14px;margin-bottom:12px;text-align:right;overflow:hidden}
+.calc-expression{font-size:13px;color:var(--muted);min-height:21px;overflow-wrap:anywhere}
+.calc-output{font-size:30px;font-weight:850;overflow-wrap:anywhere}
+.calc-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.calc-key{border:1px solid var(--line);border-radius:10px;min-height:43px;background:var(--surface);color:var(--text);font-weight:700}
+.calc-key:hover{border-color:var(--primary)}
+.calc-key.op{background:var(--soft);color:var(--primary)}
+.calc-key.equal{background:var(--primary);color:white}
+#qrOutput{display:flex;justify-content:center;align-items:center;min-height:40px;margin-top:18px;overflow:auto}
+#qrOutput canvas,#qrOutput img{max-width:100%;height:auto}
+.history-list{font-size:12px;color:var(--muted);max-height:100px;overflow:auto;margin-top:10px}
+.history-list button{display:block;width:100%;text-align:right;border:0;background:transparent;color:var(--muted);padding:4px}
+.hidden{display:none!important}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.navlinks{gap:12px}.navlinks a:nth-child(2){display:none}}
+@media(max-width:560px){.container{width:calc(100% - 24px)}.nav{min-height:65px;gap:10px}.brand{font-size:17px}.logo{width:36px;height:36px}.navlinks{display:none}.hero{padding:44px 0 25px}h1{letter-spacing:-1.8px}.hero p{font-size:14px}.search-hint{display:none}.grid{grid-template-columns:1fr;gap:12px}.tool-card{padding:17px}.section-head h2{font-size:20px}.trust{grid-template-columns:1fr;padding:18px;gap:17px}.row2,.row3{grid-template-columns:1fr}.modal{padding:8px}.modal-panel{max-height:94vh;border-radius:18px}.modal-body{padding:15px}.modal-head{padding:15px}.calc-grid{gap:5px}.calc-key{min-height:40px;font-size:12px}.calc-output{font-size:25px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="container nav">
+    <a class="brand" href="#" aria-label="ToolBox Hub home">
+      <span class="logo">✦</span>
+      <span>ToolBox Hub<small>SMART TOOLS. SIMPLER DAYS.</small></span>
+    </a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="#tools">Explore tools</a>
+      <a href="#benefits">Why ToolBox</a>
+    </nav>
+    <button class="iconbtn" id="themeBtn" type="button" aria-label="Toggle dark mode" title="Toggle theme">☾</button>
+  </div>
+</header>
+
+<main>
+<section class="hero container">
+  <span class="eyebrow"><span class="dot"></span> Free tools for everyday tasks</span>
+  <h1>Less busywork.<br><span class="gradient-text">More brilliant work.</span></h1>
+  <p>A thoughtfully designed collection of useful tools to calculate, convert, create and organize — all in one simple workspace.</p>
+  <div class="searchbox">
+    <span class="search-icon" aria-hidden="true">⌕</span>
+    <input id="searchInput" type="search" placeholder="Search tools — calculator, QR, JSON..." autocomplete="off" aria-label="Search tools">
+    <span class="search-hint">Find a tool ↵</span>
+  </div>
+  <div class="stats">
+    <span>✦ <strong>8 useful tools</strong></span>
+    <span>◈ <strong>No paid APIs</strong></span>
+    <span>⌁ <strong>Mobile friendly</strong></span>
+  </div>
+</section>
+
+<section class="container" id="tools">
+  <div class="section-head">
+    <div><h2>Explore your toolkit</h2><p>Small tools. Big time-savers.</p></div>
+    <span class="tool-category" id="resultCount">8 TOOLS</span>
+  </div>
+  <div class="pills" id="categoryPills" aria-label="Filter tools">
+    <button class="pill active" data-category="All">All tools</button>
+    <button class="pill" data-category="Calculate">Calculate</button>
+    <button class="pill" data-category="Text">Text & data</button>
+    <button class="pill" data-category="Create">Create</button>
+    <button class="pill" data-category="Convert">Convert</button>
+    <button class="pill" data-category="Plan">Plan</button>
+  </div>
+
+  <div class="grid" id="toolGrid">
+    <article class="tool-card" data-category="Calculate" data-search="scientific calculator math trigonometry sin cosine tangent logarithm power root">
+      <div class="tool-top"><span class="tool-icon">🧮</span><span class="tool-category">Calculate</span></div>
+      <h3>Scientific Calculator</h3><p>Evaluate expressions, trigonometry, powers, roots, logarithms and brackets.</p>
+      <button class="open-tool" data-tool="calculator">Open calculator <span>↗</span></button>
+    </article>
+    <article class="tool-card" data-category="Text" data-search="text editor word count character count uppercase lowercase remove spaces reverse">
+      <div class="tool-top"><span class="tool-icon">✍️</span><span class="tool-category">Text & data</span></div>
+      <h3>Text Toolkit</h3><p>Count words, change letter case, remove extra spaces and reverse text.</p>
+      <button class="open-tool" data-tool="text">Edit text <span>↗</span></button>
+    </article>
+    <article class="tool-card" data-category="Create" data-search="qr code generator create scan link url text">
+      <div class="tool-top"><span class="tool-icon">▦</span><span class="tool-category">Create</span></div>
+      <h3>QR Code Generator</h3><p>Turn a link or short message into a QR code you can save as an image.</p>
+      <button class="open-tool" data-tool="qr">Create QR code <span>↗</span></button>
+    </article>
+    <article class="tool-card" data-category="Convert" data-search="unit converter length weight mass temperature celsius fahrenheit km miles kg pounds">
+      <div class="tool-top"><span class="tool-icon">⇄</span><span class="tool-category">Convert</span></div>
+      <h3>Unit Converter</h3><p>Convert length, mass, temperature, time and digital storage units.</p>
+      <button class="open-tool" data-tool="units">Convert units <span>↗</span></button>
+    </article>
+    <article class="tool-card" data-category="Calculate" data-search="percentage discount sale price savings tax percent">
+      <div class="tool-top"><span class="tool-icon">％</span><span class="tool-category">Calculate</span></div>
+      <h3>Percentage & Discount</h3><p>Find percentages, sale prices and how much you save on a discount.</p>
+      <button class="open-tool" data-tool="percent">Calculate discount <span>↗</span></button>
+    </article>
+    <article class="tool-card" data-category="Text" data-search="json formatter validator pretty print code data developer">
+      <div class="tool-top"><span class="tool-icon">{ }</span><span class="tool-category">Text & data</span></div>
+      <h3>JSON Formatter</h3><p>Format, inspect and validate JSON data with readable indentation.</p>
+      <button class="open-tool" data-tool="json">Format JSON <span>↗</span></button>
+    </article>
+    <article class="tool-card" data-category="Create" data-search="password generator secure random password symbols numbers uppercase lowercase">
+      <div class="tool-top"><span class="tool-icon">🔐</span><span class="tool-category">Create</span></div>
+      <h3>Password Generator</h3><p>Create random passwords with adjustable length and character options.</p>
+      <button class="open-tool" data-tool="password">Generate password <span>↗</span></button>
+    </article>
+    <article class="tool-card" data-category="Plan" data-search="date calculator age birthday days between dates time difference">
+      <div class="tool-top"><span class="tool-icon">📅</span><span class="tool-category">Plan</span></div>
+      <h3>Date & Age Calculator</h3><p>Calculate age and the number of days between two dates.</p>
+      <button class="open-tool" data-tool="date">Calculate dates <span>↗</span></button>
+    </article>
+  </div>
+  <div class="empty" id="emptyState">No tools match that search. Try another word.</div>
+
+  <div class="trust" id="benefits">
+    <div class="trust-item"><span class="symbol">⚡</span><div><strong>Fast by design</strong><span>Tools run in your browser without a server for calculations.</span></div></div>
+    <div class="trust-item"><span class="symbol">◐</span><div><strong>Comfortable anywhere</strong><span>Responsive layouts and a theme for bright or dark environments.</span></div></div>
+    <div class="trust-item"><span class="symbol">♧</span><div><strong>Privacy-conscious</strong><span>Your text and calculations stay in this page; avoid entering confidential information.</span></div></div>
+  </div>
+</section>
+</main>
+
+<footer class="footer"><div class="container footer-inner"><span>© <span id="year"></span> ToolBox Hub. Built for everyday productivity.</span><span>Simple · Useful · Thoughtful</span></div></footer>
+
+<div class="modal" id="toolModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <span class="tool-icon" id="modalIcon">✦</span>
+      <h2 id="modalTitle">Tool</h2>
+      <button class="close" id="closeModal" aria-label="Close tool" type="button">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const $ = (s, root=document) => root.querySelector(s);
+const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+$("#year").textContent = new Date().getFullYear();
+
+const themeBtn = $("#themeBtn");
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  themeBtn.textContent = theme === "dark" ? "☀" : "☾";
+  themeBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+  document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#0d111b" : "#f7f8fc";
+}
+try {
+  const savedTheme = localStorage.getItem("toolbox-theme");
+  setTheme(savedTheme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+} catch { setTheme("light"); }
+themeBtn.addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  setTheme(next);
+  try { localStorage.setItem("toolbox-theme", next); } catch {}
+});
+
+let activeCategory = "All";
+function filterTools() {
+  const query = $("#searchInput").value.trim().toLowerCase();
+  let count = 0;
+  $$(".tool-card").forEach(card => {
+    const matchesCategory = activeCategory === "All" || card.dataset.category === activeCategory;
+    const matchesSearch = !query || (card.dataset.search + " " + card.innerText).toLowerCase().includes(query);
+    card.classList.toggle("hidden", !(matchesCategory && matchesSearch));
+    if (matchesCategory && matchesSearch) count++;
+  });
+  $("#resultCount").textContent = count + (count === 1 ? " TOOL" : " TOOLS");
+  $("#emptyState").style.display = count ? "none" : "block";
+}
+$("#searchInput").addEventListener("input", filterTools);
+$("#categoryPills").addEventListener("click", e => {
+  const btn = e.target.closest("[data-category]");
+  if (!btn) return;
+  activeCategory = btn.dataset.category;
+  $$(".pill").forEach(p => p.classList.toggle("active", p === btn));
+  filterTools();
+});
+
+const modal = $("#toolModal"), modalBody = $("#modalBody");
+const toolInfo = {
+  calculator:["🧮","Scientific Calculator"], text:["✍️","Text Toolkit"], qr:["▦","QR Code Generator"],
+  units:["⇄","Unit Converter"], percent:["％","Percentage & Discount"],
+  json:["{ }","JSON Formatter"], password:["🔐","Password Generator"], date:["📅","Date & Age Calculator"]
+};
+let previousFocus = null;
+function openModal(tool) {
+  if (!toolInfo[tool]) return;
+  previousFocus = document.activeElement;
+  $("#modalIcon").textContent = toolInfo[tool][0];
+  $("#modalTitle").textContent = toolInfo[tool][1];
+  modalBody.innerHTML = toolTemplates[tool];
+  modal.classList.add("show");
+  document.body.style.overflow = "hidden";
+  initializeTool(tool);
+  $("#closeModal").focus();
+}
+function closeModal() {
+  modal.classList.remove("show");
+  document.body.style.overflow = "";
+  if (previousFocus && previousFocus.focus) previousFocus.focus();
+}
+$("#toolGrid").addEventListener("click", e => {
+  const btn = e.target.closest("[data-tool]");
+  if (btn) openModal(btn.dataset.tool);
+});
+$("#closeModal").addEventListener("click", closeModal);
+modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && modal.classList.contains("show")) closeModal();
+});
+
+const toolTemplates = {
+calculator: `
+<div class="calc-screen"><div class="calc-expression" id="calcExpression">Ready</div><div class="calc-output" id="calcOutput" aria-live="polite">0</div></div>
+<div class="calc-grid" id="calcKeys">
+<button class="calc-key op" data-action="clear">AC</button><button class="calc-key op" data-value="(">(</button><button class="calc-key op" data-value=")">)</button><button class="calc-key op" data-action="back">⌫</button><button class="calc-key op" data-value="/">÷</button>
+<button class="calc-key op" data-value="sin(">sin</button><button class="calc-key op" data-value="cos(">cos</button><button class="calc-key op" data-value="tan(">tan</button><button class="calc-key op" data-value="sqrt(">√</button><button class="calc-key op" data-value="^">xʸ</button>
+<button class="calc-key" data-value="7">7</button><button class="calc-key" data-value="8">8</button><button class="calc-key" data-value="9">9</button><button class="calc-key op" data-value="log(">log</button><button class="calc-key op" data-value="*">×</button>
+<button class="calc-key" data-value="4">4</button><button class="calc-key" data-value="5">5</button><button class="calc-key" data-value="6">6</button><button class="calc-key op" data-value="ln(">ln</button><button class="calc-key op" data-value="-">−</button>
+<button class="calc-key" data-value="1">1</button><button class="calc-key" data-value="2">2</button><button class="calc-key" data-value="3">3</button><button class="calc-key op" data-value="π">π</button><button class="calc-key op" data-value="+">+</button>
+<button class="calc-key" data-value="0">0</button><button class="calc-key" data-value=".">.</button><button class="calc-key op" data-value="%">%</button><button class="calc-key op" data-value="e">e</button><button class="calc-key equal" data-action="equals">=</button>
+</div>
+<div class="actions"><button class="btn btn-small" data-calc-extra="deg">Angle: Degrees</button><button class="btn btn-small" data-calc-extra="memory">Memory: 0</button><button class="btn btn-small" data-calc-extra="history">History</button></div><div class="history-list" id="calcHistory"></div>
+<p class="notice">Examples: 2+3*4, sin(30), sqrt(81), log(100), 2^8. Trigonometry uses degrees.</p><div class="status" id="calcStatus" aria-live="polite"></div>`,
+text: `
+<div class="field"><label for="textInput">Your text</label><textarea id="textInput" class="control" placeholder="Type or paste your text here..."></textarea></div>
+<div class="row3"><div class="result"><strong>Words</strong><output id="wordCount">0</output></div><div class="result"><strong>Characters</strong><output id="charCount">0</output></div><div class="result"><strong>Sentences</strong><output id="sentenceCount">0</output></div></div>
+<div class="actions"><button class="btn btn-primary" data-text-action="upper">UPPERCASE</button><button class="btn" data-text-action="lower">lowercase</button><button class="btn" data-text-action="title">Title Case</button><button class="btn" data-text-action="trim">Clean spaces</button><button class="btn" data-text-action="reverse">Reverse</button><button class="btn" data-text-action="copy">Copy text</button><button class="btn" data-text-action="clear">Clear</button></div><div class="status" id="textStatus" aria-live="polite"></div>`,
+qr: `
+<div class="field"><label for="qrText">Text or website URL</label><textarea id="qrText" class="control" placeholder="https://example.com" rows="3"></textarea></div>
+<div class="row2"><div class="field"><label for="qrSize">Image size</label><select id="qrSize" class="control"><option value="180">180 × 180</option><option value="240" selected>240 × 240</option><option value="320">320 × 320</option></select></div><div class="field"><label for="qrDark">QR color</label><select id="qrDark" class="control"><option value="#111827">Dark</option><option value="#6558e8">Purple</option><option value="#087f5b">Green</option></select></div></div>
+<div class="actions"><button class="btn btn-primary" id="makeQR">Generate QR</button><button class="btn" id="downloadQR" disabled>Save image</button></div><div id="qrOutput"></div><div class="status" id="qrStatus" aria-live="polite">QR generation needs an internet connection to load its free library.</div>`,
+units: `
+<div class="field"><label for="unitType">Conversion type</label><select class="control" id="unitType"><option value="length">Length</option><option value="mass">Mass / weight</option><option value="temperature">Temperature</option><option value="time">Time</option><option value="storage">Digital storage (decimal)</option></select></div>
+<div class="row2"><div class="field"><label for="unitValue">Value</label><input class="control" type="number" id="unitValue" value="1" step="any"></div><div class="field"><label for="unitFrom">From</label><select class="control" id="unitFrom"></select></div></div>
+<div class="field"><label for="unitTo">To</label><select class="control" id="unitTo"></select></div>
+<button class="btn btn-primary" id="convertUnits">Convert units</button><div class="result"><strong>Result</strong><output id="unitResult">—</output></div><div class="status" id="unitStatus" aria-live="polite"></div>`,
+percent: `
+<div class="field"><label for="originalPrice">Original amount (₹ or any currency)</label><input class="control" type="number" id="originalPrice" min="0" step="any" placeholder="e.g. 500"></div>
+<div class="row2"><div class="field"><label for="discountPercent">Discount (%)</label><input class="control" type="number" id="discountPercent" min="0" max="100" step="any" value="20"></div><div class="field"><label for="extraTax">Extra tax (%) — optional</label><input class="control" type="number" id="extraTax" min="0" step="any" value="0"></div></div>
+<button class="btn btn-primary" id="calcDiscount">Calculate price</button><div class="row2"><div class="result"><strong>You save</strong><output id="saveResult">—</output></div><div class="result"><strong>Final price</strong><output id="finalPrice">—</output></div></div><div class="status" id="percentStatus" aria-live="polite"></div><p class="notice">Tax is applied after the discount. Enter a valid discount between 0 and 100%.</p>`,
+json: `
+<div class="field"><label for="jsonInput">JSON data</label><textarea class="control" id="jsonInput" spellcheck="false" placeholder='{"name":"ToolBox Hub","free":true}'></textarea></div>
+<div class="actions"><button class="btn btn-primary" id="formatJSON">Format JSON</button><button class="btn" id="minifyJSON">Minify</button><button class="btn" id="validateJSON">Validate</button><button class="btn" id="copyJSON">Copy output</button></div>
+<div class="field" style="margin-top:16px"><label for="jsonOutput">Output</label><textarea class="control" id="jsonOutput" spellcheck="false" placeholder="Formatted JSON will appear here..."></textarea></div><div class="status" id="jsonStatus" aria-live="polite"></div>`,
+password: `
+<div class="field"><label for="passLength">Password length: <span id="passLengthLabel">20</span></label><input class="control" type="range" id="passLength" min="8" max="64" value="20"></div>
+<div class="row2"><div class="field"><label><input type="checkbox" id="passUpper" checked> Uppercase letters (A–Z)</label><label><input type="checkbox" id="passLower" checked> Lowercase letters (a–z)</label></div><div class="field"><label><input type="checkbox" id="passNumbers" checked> Numbers (0–9)</label><label><input type="checkbox" id="passSymbols" checked> Symbols (!@#...)</label></div></div>
+<button class="btn btn-primary" id="makePassword">Generate password</button><div class="result"><strong>Generated password</strong><output id="passwordOutput">Tap generate to create one.</output></div><div class="actions"><button class="btn" id="copyPassword">Copy password</button></div><div class="status" id="passStatus" aria-live="polite"></div><p class="notice">Uses your browser's cryptographic random number generator when supported. Don't share generated passwords.</p>`,
+date: `
+<div class="field"><label for="birthDate">Date of birth</label><input class="control" type="date" id="birthDate"></div>
+<button class="btn btn-primary" id="calculateAge">Calculate age</button><div class="result"><strong>Age</strong><output id="ageOutput">—</output></div>
+<div class="field" style="margin-top:22px"><label for="dateOne">Start date</label><input class="control" type="date" id="dateOne"></div>
+<div class="field"><label for="dateTwo">End date</label><input class="control" type="date" id="dateTwo"></div>
+<button class="btn" id="calculateDays">Calculate days between dates</button><div class="result"><strong>Date difference</strong><output id="daysOutput">—</output></div><div class="status" id="dateStatus" aria-live="polite"></div>`
+};
+
+function status(id, message, type="") {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = message;
+  el.className = "status" + (type ? " " + type : "");
+}
+function copyText(text, statusId) {
+  if (!text) { status(statusId, "Nothing to copy.", "error"); return; }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => status(statusId, "Copied to clipboard.", "success"))
+      .catch(() => fallbackCopy(text, statusId));
+  } else fallbackCopy(text, statusId);
+}
+function fallbackCopy(text, statusId) {
+  const area = document.createElement("textarea");
+  area.value = text; area.style.position="fixed"; area.style.opacity="0";
+  document.body.appendChild(area); area.select();
+  let ok=false;
+  try { ok=document.execCommand("copy"); } catch {}
+  area.remove();
+  status(statusId, ok ? "Copied to clipboard." : "Copy failed. Please select and copy manually.", ok ? "success" : "error");
+}
+
+function initializeTool(tool) {
+  if (tool === "calculator") initCalculator();
+  if (tool === "text") initText();
+  if (tool === "qr") initQR();
+  if (tool === "units") initUnits();
+  if (tool === "percent") initPercent();
+  if (tool === "json") initJSON();
+  if (tool === "password") initPassword();
+  if (tool === "date") initDate();
+}
+
+/* Scientific calculator: a small expression parser, not eval(). */
+function tokenize(expr) {
+  const tokens = [];
+  let i=0;
+  while (i < expr.length) {
+    if (/\s/.test(expr[i])) { i++; continue; }
+    const rest=expr.slice(i);
+    const number=rest.match(/^(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/i);
+    if (number) { tokens.push({type:"number",value:Number(number[0])}); i+=number[0].length; continue; }
+    const word=rest.match(/^[a-zA-Z]+/);
+    if (word) { tokens.push({type:"word",value:word[0].toLowerCase()}); i+=word[0].length; continue; }
+    if ("+-*/^()%".includes(expr[i])) { tokens.push({type:"op",value:expr[i++]}); continue; }
+    throw Error("Invalid character: " + expr[i]);
+  }
+  return tokens;
+}
+function evaluateExpression(expr, degrees=true) {
+  const tokens=tokenize(expr);
+  let p=0;
+  const peek=()=>tokens[p];
+  const eat=(v)=>{if(peek()?.value===v){p++;return true}return false};
+  function primary() {
+    const t=peek();
+    if (!t) throw Error("Expression is incomplete.");
+    if (eat("+")) return primary();
+    if (eat("-")) return -primary();
+    if (eat("(")) { const v=add(); if(!eat(")")) throw Error("Missing closing bracket."); return v; }
+    if (t.type==="number") {p++;return t.value;}
+    if (t.type==="word") {
+      p++;
+      if(t.value==="pi") return Math.PI;
+      if(t.value==="e") return Math.E;
+      if(!["sin","cos","tan","sqrt","log","ln","abs","round","floor","ceil"].includes(t.value)) throw Error("Unknown function or constant: "+t.value);
+      if(!eat("(")) throw Error("Use "+t.value+"(number).");
+      const a=add(); if(!eat(")")) throw Error("Missing closing bracket after "+t.value+".");
+      if(t.value==="sin") return Math.sin(degrees?a*Math.PI/180:a);
+      if(t.value==="cos") return Math.cos(degrees?a*Math.PI/180:a);
+      if(t.value==="tan") { const r=degrees?a*Math.PI/180:a; if(Math.abs(Math.cos(r))<1e-12) throw Error("Tangent is undefined at this angle."); return Math.tan(r); }
+      if(t.value==="sqrt") {if(a<0) throw Error("Square root needs a non-negative number.");return Math.sqrt(a);}
+      if(t.value==="log") {if(a<=0) throw Error("Logarithm needs a positive number.");return Math.log10(a);}
+      if(t.value==="ln") {if(a<=0) throw Error("Logarithm needs a positive number.");return Math.log(a);}
+      if(t.value==="abs") return Math.abs(a);
+      if(t.value==="round") return Math.round(a);
+      if(t.value==="floor") return Math.floor(a);
+      if(t.value==="ceil") return Math.ceil(a);
+    }
+    throw Error("Unexpected input.");
+  }
+  function power(){let a=primary();if(eat("^")){const b=unary();a=Math.pow(a,b);}return a;}
+  function unary(){if(eat("+"))return unary();if(eat("-"))return -unary();return power();}
+  function mul(){let a=unary();while(true){if(eat("*"))a*=unary();else if(eat("/")){const b=unary();if(b===0)throw Error("Cannot divide by zero.");a/=b;}else if(eat("%"))a%=unary();else break;}return a;}
+  function add(){let a=mul();while(true){if(eat("+"))a+=mul();else if(eat("-"))a-=mul();else break;}return a;}
+  const result=add();
+  if(p!==tokens.length) throw Error("Please check the expression.");
+  if(!Number.isFinite(result)) throw Error("Result is outside the supported number range.");
+  return result;
+}
+function initCalculator() {
+  let expr="", degrees=true, memory=0, history=[];
+  const out=$("#calcOutput"), exp=$("#calcExpression");
+  function calculate(showError=false) {
+    if(!expr.trim()){out.textContent="0";status("calcStatus","");return null;}
+    try {
+      const val=evaluateExpression(expr,degrees);
+      out.textContent=Number(val.toPrecision(12)).toString();
+      status("calcStatus","");
+      if(showError){history.unshift(expr+" = "+out.textContent);history=history.slice(0,8);renderHistory();}
+      return val;
+    } catch(err) {
+      if(showError) {status("calcStatus",err.message,"error");}
+      else status("calcStatus","");
+      return null;
+    }
+  }
+  function renderHistory(){const el=$("#calcHistory");el.replaceChildren();history.forEach(item=>{const b=document.createElement("button");b.textContent=item;b.addEventListener("click",()=>{expr=item.split(" = ")[0];exp.textContent=expr;calculate();});el.appendChild(b);});}
+  $("#calcKeys").addEventListener("click",e=>{
+    const b=e.target.closest("button");if(!b)return;
+    if(b.dataset.action==="clear"){expr="";exp.textContent="Ready";out.textContent="0";status("calcStatus","");return;}
+    if(b.dataset.action==="back"){expr=expr.slice(0,-1);}
+    else if(b.dataset.action==="equals"){calculate(true);return;}
+    else if(b.dataset.value){expr+=b.dataset.value;}
+    exp.textContent=expr;calculate();
+  });
+  $$(".modal-body [data-calc-extra]").forEach(b=>b.addEventListener("click",()=>{
+    const action=b.dataset.calcExtra;
+    if(action==="deg"){degrees=!degrees;b.textContent="Angle: "+(degrees?"Degrees":"Radians");calculate();}
+    if(action==="memory"){
+      if(b.textContent.includes("Recall")){expr+=String(memory);exp.textContent=expr;calculate();b.textContent="Memory: "+memory;}
+      else {memory=calculate()??0;b.textContent="Memory: "+Number(memory.toPrecision(6));}
+    }
+    if(action==="history")$("#calcHistory").classList.toggle("hidden");
+  }));
+  const keyHandler=e=>{
+    if(!modal.classList.contains("show")||!$("#calcKeys"))return;
+    if(e.key==="Enter" && $("#modalTitle").textContent==="Scientific Calculator"){e.preventDefault();calculate(true);}
+    if(e.key==="Escape")return;
+  };
+  document.addEventListener("keydown",keyHandler,{once:true});
+}
+
+/* Text toolkit */
+function initText() {
+  const input=$("#textInput");
+  function update(){const t=input.value;$("#wordCount").textContent=(t.trim().match(/\S+/g)||[]).length;$("#charCount").textContent=t.length;$("#sentenceCount").textContent=(t.trim().match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).filter(s=>s.trim()).length;}
+  input.addEventListener("input",update);update();
+  modalBody.addEventListener("click",e=>{
+    const b=e.target.closest("[data-text-action]");if(!b)return;
+    const t=input.value;
+    switch(b.dataset.textAction){
+      case "upper":input.value=t.toLocaleUpperCase();break;
+      case "lower":input.value=t.toLocaleLowerCase();break;
+      case "title":input.value=t.toLocaleLowerCase().replace(/(^|[\s-])(\p{L})/gu,(m,a,c)=>a+c.toLocaleUpperCase());break;
+      case "trim":input.value=t.replace(/\s+/g," ").trim();break;
+      case "reverse":input.value=Array.from(t).reverse().join("");break;
+      case "copy":copyText(t,"textStatus");return;
+      case "clear":input.value="";break;
+    }
+    update();status("textStatus","Text updated.","success");
+  });
+}
+
+/* QR code */
+function initQR() {
+  let generated=false;
+  $("#makeQR").addEventListener("click",()=>{
+    const text=$("#qrText").value.trim(), output=$("#qrOutput");
+    output.replaceChildren();generated=false;$("#downloadQR").disabled=true;
+    if(!text){status("qrStatus","Enter text or a URL first.","error");return;}
+    if(typeof QRCode==="undefined"){status("qrStatus","QR library could not load. Check your internet connection and reload the page.","error");return;}
+    try {
+      const size=Number($("#qrSize").value), color=$("#qrDark").value;
+      const holder=document.createElement("div");
+      output.appendChild(holder);
+      new QRCode(holder,{text,width:size,height:size,colorDark:color,colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});
+      generated=true;$("#downloadQR").disabled=false;status("qrStatus","QR code created successfully.","success");
+    } catch {status("qrStatus","Could not generate QR code. Try shorter text.","error");}
+  });
+  $("#downloadQR").addEventListener("click",()=>{
+    if(!generated)return;
+    const holder=$("#qrOutput"), canvas=$("canvas",holder), img=$("img",holder);
+    const url=canvas?canvas.toDataURL("image/png"):img?.src;
+    if(!url){status("qrStatus","QR image is not ready yet.","error");return;}
+    const a=document.createElement("a");a.href=url;a.download="toolbox-hub-qr.png";a.click();
+  });
+}
+
+/* Unit converter */
+const unitData = {
+length:{m:1,km:1000,cm:.01,mm:.001,mi:1609.344,yd:.9144,ft:.3048,in:.0254},
+mass:{kg:1,g:.001,mg:.000001,lb:.45359237,oz:.028349523125,tonne:1000},
+time:{s:1,min:60,h:3600,day:86400,week:604800},
+storage:{bit:.125,B:1,kB:1000,MB:1e6,GB:1e9,TB:1e12,KiB:1024,MiB:1048576,GiB:1073741824}
+};
+const unitLabels={m:"Meters (m)",km:"Kilometers (km)",cm:"Centimeters (cm)",mm:"Millimeters (mm)",mi:"Miles (mi)",yd:"Yards (yd)",ft:"Feet (ft)",in:"Inches (in)",kg:"Kilograms (kg)",g:"Grams (g)",mg:"Milligrams (mg)",lb:"Pounds (lb)",oz:"Ounces (oz)",tonne:"Metric tonnes",s:"Seconds",min:"Minutes",h:"Hours",day:"Days",week:"Weeks",bit:"Bits",B:"Bytes",kB:"Kilobytes (decimal)",MB:"Megabytes (decimal)",GB:"Gigabytes (decimal)",TB:"Terabytes (decimal)",KiB:"Kibibytes",MiB:"Mebibytes",GiB:"Gibibytes"};
+function initUnits(){
+  const type=$("#unitType"), from=$("#unitFrom"),to=$("#unitTo");
+  function populate(){
+    const t=type.value;
+    let keys=t==="temperature"?["C","F","K"]:Object.keys(unitData[t]);
+    const opts=keys.map(k=>`<option value="${k}">${t==="temperature"?({C:"Celsius (°C)",F:"Fahrenheit (°F)",K:"Kelvin (K)"}[k]):unitLabels[k]}</option>`).join("");
+    from.innerHTML=opts;to.innerHTML=opts;
+    if(keys.length>1)to.selectedIndex=1;
+  }
+  type.addEventListener("change",populate);populate();
+  $("#convertUnits").addEventListener("click",()=>{
+    const v=Number($("#unitValue").value),a=from.value,b=to.value;
+    if($("#unitValue").value.trim()===""||!Number.isFinite(v)){status("unitStatus","Enter a valid number.","error");return;}
+    let r;
+    if(type.value==="temperature"){
+      const c=a==="C"?v:a==="F"?(v-32)*5/9:v-273.15;
+      r=b==="C"?c:b==="F"?c*9/5+32:c+273.15;
+      if(b==="K"&&r<0){status("unitStatus","Kelvin cannot be below absolute zero.","error");return;}
+    } else r=v*unitData[type.value][a]/unitData[type.value][b];
+    $("#unitResult").textContent=Number(r.toPrecision(12)).toLocaleString(undefined,{maximumFractionDigits:10})+" "+b;
+    status("unitStatus","Conversion complete.","success");
+  });
+}
+
+/* Discount and tax */
+function initPercent(){
+  $("#calcDiscount").addEventListener("click",()=>{
+    const raw=$("#originalPrice").value, price=Number(raw), d=Number($("#discountPercent").value),tax=Number($("#extraTax").value);
+    if(raw.trim()===""||!Number.isFinite(price)||price<0||!Number.isFinite(d)||d<0||d>100||!Number.isFinite(tax)||tax<0){
+      status("percentStatus","Enter a non-negative price, discount from 0–100%, and valid tax.","error");return;
+    }
+    const saved=price*d/100, discounted=price-saved, final=discounted*(1+tax/100);
+    $("#saveResult").textContent=saved.toLocaleString(undefined,{maximumFractionDigits:2});
+    $("#finalPrice").textContent=final.toLocaleString(undefined,{maximumFractionDigits:2});
+    status("percentStatus","Calculation complete. Tax is applied after discount.","success");
+  });
+}
+
+/* JSON tools */
+function initJSON(){
+  function run(mode){
+    const src=$("#jsonInput").value;
+    try{
+      const value=JSON.parse(src);
+      $("#jsonOutput").value=mode==="minify"?JSON.stringify(value):JSON.stringify(value,null,2);
+      status("jsonStatus","Valid JSON. "+(mode==="minify"?"Minified output ready.":"Formatted output ready."),"success");
+    }catch(err){status("jsonStatus","Invalid JSON: "+err.message,"error");}
+  }
+  $("#formatJSON").addEventListener("click",()=>run("format"));
+  $("#minifyJSON").addEventListener("click",()=>run("minify"));
+  $("#validateJSON").addEventListener("click",()=>{try{JSON.parse($("#jsonInput").value);status("jsonStatus","Valid JSON.","success");}catch(e){status("jsonStatus","Invalid JSON: "+e.message,"error");}});
+  $("#copyJSON").addEventListener("click",()=>copyText($("#jsonOutput").value,"jsonStatus"));
+}
+
+/* Password generator */
+function initPassword(){
+  const length=$("#passLength");
+  length.addEventListener("input",()=>$("#passLengthLabel").textContent=length.value);
+  $("#makePassword").addEventListener("click",()=>{
+    const sets=[];
+    if($("#passUpper").checked)sets.push("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    if($("#passLower").checked)sets.push("abcdefghijklmnopqrstuvwxyz");
+    if($("#passNumbers").checked)sets.push("0123456789");
+    if($("#passSymbols").checked)sets.push("!@#$%^&*()-_=+[]{}:,.?");
+    if(!sets.length){status("passStatus","Select at least one character type.","error");return;}
+    if(!window.crypto?.getRandomValues){status("passStatus","Secure random generation is not supported in this browser.","error");return;}
+    const all=sets.join("");
+    const randomIndex=max=>{
+      const limit=Math.floor(256/max)*max;let b;
+      do{b=new Uint8Array(1);crypto.getRandomValues(b);}while(b[0]>=limit);
+      return b[0]%max;
+    };
+    const chars=sets.map(set=>set[randomIndex(set.length)]);
+    while(chars.length<Number(length.value))chars.push(all[randomIndex(all.length)]);
+    for(let i=chars.length-1;i>0;i--){const j=randomIndex(i+1);[chars[i],chars[j]]=[chars[j],chars[i]];}
+    $("#passwordOutput").textContent=chars.join("");
+    status("passStatus","Password generated in your browser.","success");
+  });
+  $("#copyPassword").addEventListener("click",()=>copyText($("#passwordOutput").textContent,"passStatus"));
+}
+
+/* Date and age calculations use calendar dates in UTC to avoid DST errors. */
+function parseDate(value){
+  if(!value)return null;
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value);if(!m)return null;
+  const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));
+  return d.getUTCFullYear()===+m[1]&&d.getUTCMonth()===+m[2]-1&&d.getUTCDate()===+m[3]?d:null;
+}
+function initDate(){
+  const today=new Date(), todayISO=new Date(Date.UTC(today.getFullYear(),today.getMonth(),today.getDate())).toISOString().slice(0,10);
+  $("#dateTwo").value=todayISO;
+  $("#birthDate").max=todayISO;
+  $("#calculateAge").addEventListener("click",()=>{
+    const b=parseDate($("#birthDate").value),now=parseDate(todayISO);
+    if(!b){status("dateStatus","Enter a valid date of birth.","error");return;}
+    if(b>now){status("dateStatus","Date of birth cannot be in the future.","error");return;}
+    let y=now.getUTCFullYear()-b.getUTCFullYear(),m=now.getUTCMonth()-b.getUTCMonth(),d=now.getUTCDate()-b.getUTCDate();
+    if(d<0){m--;const daysPrev=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),0)).getUTCDate();d+=daysPrev;}
+    if(m<0){y--;m+=12;}
+    $("#ageOutput").textContent=`${y} years, ${m} months, ${d} days`;
+    status("dateStatus","Age calculated using calendar dates.","success");
+  });
+  $("#calculateDays").addEventListener("click",()=>{
+    const a=parseDate($("#dateOne").value),b=parseDate($("#dateTwo").value);
+    if(!a||!b){status("dateStatus","Choose two valid dates.","error");return;}
+    const days=Math.round((b-a)/86400000);
+    $("#daysOutput").textContent=`${Math.abs(days).toLocaleString()} days${days<0?" (end date is earlier)":""}`;
+    status("dateStatus","Difference is calculated excluding the start date.","success");
+  });
+}
+</script>
+</body>
+</html>
